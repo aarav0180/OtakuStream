@@ -1,4 +1,3 @@
----
 # 🌸 Otaku Stream 🎥✨  
 **Your Gateway to the World of Anime!**  
 
