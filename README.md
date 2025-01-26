@@ -1,7 +1,4 @@
-Here’s an updated and attractive README for your project:
-
 ---
-
 # 🌸 Otaku Stream 🎥✨  
 **Your Gateway to the World of Anime!**  
 
