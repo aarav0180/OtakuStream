@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+import 'package:otaku_stream/Screens/stream_screen.dart';
+import 'package:otaku_stream/Services/watch_later_cache.dart';
 import 'package:provider/provider.dart';
 import '../Providers/detail_provider.dart';
+import '../Providers/episode_provider.dart';
+import '../Providers/server_provider.dart';
+import '../Widgets/snack_bar.dart';
 
 class MovieDetailPage extends StatefulWidget {
   final String id;
@@ -18,7 +25,27 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       detailProvider.fetchAnimeDetail(widget.id);
     });
+    final episodeProvider = Provider.of<EpisodeProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      episodeProvider.fetchAndCacheEpisodes(widget.id);
+    });
   }
+
+  void showCustomSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      content: CustomSnackBar(
+        message: message,
+        backgroundColor: Colors.black,
+      ),
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 3),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +54,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
     return Scaffold(
       body: detailProvider.animeDetail == null
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+        child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 500,
+              child: Lottie.asset('assets/animations/animation2.json'),
+            ),
+        )
           : SizedBox(
         height: MediaQuery.of(context).size.height, // Full screen height
         child: Column(
@@ -78,30 +111,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 40), // Top spacing
-                        // Movie Title and Info
-                        // Row(
-                        //   crossAxisAlignment: CrossAxisAlignment.center,
-                        //   children: [
-                        //     Expanded(
-                        //       child: Text(
-                        //         detailProvider.animeDetail!.data.anime.info.name,
-                        //         style: const TextStyle(
-                        //           fontSize: 32,
-                        //           fontWeight: FontWeight.bold,
-                        //           color: Colors.white,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     const SizedBox(width: 10),
-                        //     Text(
-                        //       detailProvider.animeDetail!.data.anime.moreInfo.genres.join(', '),
-                        //       style: const TextStyle(
-                        //         fontSize: 16,
-                        //         color: Colors.white70,
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
 
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,30 +164,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         ),
 
                         const SizedBox(height: 16),
-                        // Rating Section
-                        // Row(
-                        //   children: [
-                        //     Row(
-                        //       children: List.generate(
-                        //         detailProvider.animeDetail!.data.anime.moreInfo..round(),
-                        //             (index) => const Icon(
-                        //           Icons.star,
-                        //           color: Colors.orange,
-                        //           size: 20,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     const SizedBox(width: 8),
-                        //     Text(
-                        //       'From ${movie.ratingCount} users',
-                        //       style: const TextStyle(
-                        //         fontSize: 14,
-                        //         color: Colors.white70,
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-
                         Row(
                           children: [
                             _InfoChip(
@@ -256,27 +241,96 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         ),
 
                         const SizedBox(height: 20),
-                        // Watch Now Button
-                        Center(
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 15),
-                              backgroundColor: Colors.orange,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // Watch Later
+                            GestureDetector(
+                              onTap: () async {
+                                final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+                                final animeDetail = detailProvider.animeDetail?.data.anime;
+
+                                if (animeDetail != null) {
+                                  final animeData = {
+                                    'id': widget.id,
+                                    'name': animeDetail.info?.name ?? "",
+                                    'poster': animeDetail.info?.poster ?? "",
+                                    'description': animeDetail.info?.description ?? "",
+                                    'genres': animeDetail.moreInfo?.genres ?? [],
+                                    'status': animeDetail.moreInfo?.status ?? "",
+                                    'studios': animeDetail.moreInfo?.studios ?? "",
+                                    'charactersVoiceActors': animeDetail.info?.charactersVoiceActors?.map((cast) {
+                                      return {
+                                        'name': cast.voiceActor?.name,
+                                        'poster': cast.voiceActor?.poster,
+                                        'characterName': cast.character?.name,
+                                      };
+                                    }).toList() ?? [],
+                                  };
+
+                                  await LaterAnimeCache.saveAnimeToCache(widget.id, animeData);
+                                  showCustomSnackBar(context, "Yay! The anime is saved successfully");
+
+                                } else {
+                                  showCustomSnackBar(context, "Oops! Something went wrong while saving. Please check your connection or report the issue.");
+                                }
+                              },
+                              child: AnimatedContainer(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 15),
+                                duration: const Duration(milliseconds: 500),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.orange, width: 1.5),
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Watch Later',
+                                    style: GoogleFonts.poppins(
+                                      color: const Color(0xFFFFA726),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            child: const Text(
-                              'Watch now',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+
+                            const SizedBox(width: 10),
+
+                            // Watch Now Button
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  final episodeProvider = Provider.of<EpisodeProvider>(context, listen: false);
+
+                                  final serverProvider = Provider.of<ServerProvider>(context, listen: false);
+                                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                                    serverProvider.fetchAndCacheServers(episodeProvider.episodeData!.data.episodes[0].episodeId);
+                                  });
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdvancedVideoPlayer()));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30, vertical: 15),
+                                  backgroundColor: Colors.orange,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Watch Now',
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
 
                         // Similar Anime Section

@@ -291,6 +291,7 @@ enum Type {
   Special,
   TV,
   Null,
+  Music
 }
 
 class MoreInfo {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:otaku_stream/Screens/explorepage.dart';
 import 'package:otaku_stream/Screens/homepage.dart';
+import 'package:otaku_stream/Screens/profile_page.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -42,11 +44,11 @@ class CustomBottomNavBar extends StatelessWidget {
             isSelected: currentIndex == 1,
             onTap: () => onTap(1),
             isCenter: true,
-            iconSize: iconSize * 1.5, // Larger icon for the center
+            iconSize: iconSize * 1.5,
           ),
           _buildNavItem(
-            icon: Icons.bookmark,
-            label: 'Save',
+            icon: Icons.explore_outlined,
+            label: 'Explore',
             isSelected: currentIndex == 2,
             onTap: () => onTap(2),
             iconSize: iconSize,
@@ -99,7 +101,7 @@ class CustomBottomNavBar extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: iconSize / 2.9, // Adjust font size
+                fontSize: iconSize / 2.9,
                 color: isSelected ? Colors.orange : Colors.white,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
@@ -122,9 +124,9 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
   int _currentIndex = 1;
 
   final List<Widget> _pages = [
-    const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24))),
-    AnimeHomeScreen(),
-    const Center(child: Text('Save Page', style: TextStyle(fontSize: 24))),
+    const ProfilePage(),//const Center(child: Text('Profile Page', style: TextStyle(fontSize: 24))),
+    const AnimeHomeScreen(),
+    const ExplorePage(),
   ];
 
   void _onTabTapped(int index) {
@@ -137,15 +139,13 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      extendBody: true, // Extends body behind the navigation bar
+      extendBody: true,
       body: Stack(
         children: [
-          // Display the current page
           _pages[_currentIndex],
 
-          // Transparent bottom navigation bar
           Positioned(
-            bottom: 0, // Add responsive spacing
+            bottom: 0,
             left: 0,
             right: 0,
             child: CustomBottomNavBar(

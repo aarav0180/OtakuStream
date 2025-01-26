@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:otaku_stream/Screens/HomePage.dart';
 import 'package:otaku_stream/Screens/about_page.dart';
+import 'package:otaku_stream/Screens/upcoming_animes.dart';
+import 'package:otaku_stream/Screens/saved_anime_screen.dart';
+
+import '../Screens/settings_page.dart';
 
 class AnimeAppMenu extends StatefulWidget {
 
@@ -11,66 +14,11 @@ class AnimeAppMenu extends StatefulWidget {
 }
 
 class _AnimeAppMenuState extends State<AnimeAppMenu> {
-  // final List<MenuItem> menuItems = [
-  //   MenuItem(
-  //     icon: Icons.home,
-  //     title: "Home",
-  //     onTap: () {
-  //       // Navigate to Home
-  //       Navigator.push(context, MaterialPageRoute(builder: (context) => AnimeHomeScreen()));
-  //
-  //       Navigator.push(context, MaterialPageRoute(builder: (_) => AnimeHomeScreen()));
-  //     },
-  //   ),
-  //   MenuItem(
-  //     icon: Icons.movie,
-  //     title: "Movies",
-  //     onTap: () {
-  //       // Navigate to Movies
-  //       Navigator.push(context, MaterialPageRoute(builder: (context) => const MoviesPage()));
-  //     },
-  //   ),
-  //   MenuItem(
-  //     icon: Icons.tv,
-  //     title: "TV Shows",
-  //     onTap: () {
-  //       // Navigate to TV Shows
-  //       Navigator.push(context, MaterialPageRoute(builder: (context) => const TVShowsPage()));
-  //     },
-  //   ),
-  //   MenuItem(
-  //     icon: Icons.favorite,
-  //     title: "Favorites",
-  //     onTap: () {
-  //       // Navigate to Favorites
-  //       Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritesPage()));
-  //     },
-  //   ),
-  //   MenuItem(
-  //     icon: Icons.settings,
-  //     title: "Settings",
-  //     onTap: () {
-  //       // Navigate to Settings
-  //       Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
-  //     },
-  //   ),
-  //   MenuItem(
-  //     icon: Icons.info,
-  //     title: "About",
-  //     onTap: () {
-  //       // Navigate to About
-  //       Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutPage()));
-  //     },
-  //   ),
-  // ];
-
   @override
   Widget build(BuildContext context) {
-    // Get screen size to make the menu responsive
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // Define menu items inside the build method to access `context`
     final List<MenuItem> menuItems = [
       MenuItem(
         icon: Icons.home,
@@ -81,42 +29,42 @@ class _AnimeAppMenuState extends State<AnimeAppMenu> {
       ),
       MenuItem(
         icon: Icons.movie,
-        title: "Movies",
+        title: "Latest Animes",
         onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => const MoviesPage()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LatestAnimes()),
+          );
         },
       ),
       MenuItem(
         icon: Icons.tv,
-        title: "TV Shows",
+        title: "Saved Animes",
         onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => const TVShowsPage()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SavedAnimeScreen()),
+          );
         },
       ),
-      MenuItem(
-        icon: Icons.favorite,
-        title: "Favorites",
-        onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => const FavoritesPage()),
-          // );
-        },
-      ),
+      // MenuItem(
+      //   icon: Icons.favorite,
+      //   title: "",
+      //   onTap: () {
+      //     // Navigator.push(
+      //     //   context,
+      //     //   MaterialPageRoute(builder: (context) => const FavoritesPage()),
+      //     // );
+      //   },
+      // ),
       MenuItem(
         icon: Icons.settings,
         title: "Settings",
         onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => const SettingsPage()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SettingsPage()),
+          );
         },
       ),
       MenuItem(

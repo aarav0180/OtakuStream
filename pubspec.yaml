@@ -44,6 +44,19 @@ dependencies:
 
   http: null
 
+  video_player: ^2.9.2
+
+  flutter_spinkit: null
+
+  dio: null
+  path_provider: null
+  google_fonts: null
+  shimmer: null
+  flutter_native_splash: ^2.4.3
+  flutter_launcher_icons: ^0.14.3
+  cached_network_image: null
+  lottie: null
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -54,6 +67,13 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+
+flutter_icons:
+  android: true           # Generate icons for Android
+  ios: false               # Generate icons for iOS
+  image_path: "assets/images/logo.png"  # Path to your app icon file
+  adaptive_icon_background: "#FF7F32"  # Optional: Background color for Android adaptive icons
+  adaptive_icon_foreground: "assets/images/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,7 +90,12 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/logo-bg.png
-
+    - assets/images/back.jpg
+    - assets/images/back2.png
+    - assets/animations/
+    - assets/animations/animation2.json
+    - assets/animations/comingsoon.json
+    - assets/animations/soon.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
@@ -96,3 +121,58 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_native_splash:
+  # Background color of the splash screen.
+  color: "#000000"  # Black background color (for a sleek dark look).
+
+  # Background image is already set to a logo, we'll keep this as is.
+  background_image: "assets/images/logo.png"
+
+  # Image (logo) used in the splash screen. Ensure it's a high-quality PNG.
+  image: "assets/images/logo.png"
+
+  # Optional branding position and padding settings.
+  branding_mode: bottom  # Place branding logo at the bottom for better positioning.
+  branding_bottom_padding: 24  # Add a little padding from the bottom.
+
+  # Dark mode configuration (use a slightly dark theme for dark mode).
+  color_dark: "#111111"  # A dark gray for dark mode background.
+  image_dark: "assets/images/logo.png"  # Optional: use an alternative logo for dark mode.
+
+  # For Android 12 and above, make sure to use the app icon in splash screen if no specific image is set.
+  android_12:
+    image: "assets/images/logo.png"
+    color: "#000000"  # Same black background for Android 12.
+    icon_background_color: "#FF7F32"  # Orange icon background for a pop of color.
+
+  # Android and iOS platform-specific configurations for color.
+  color_android: "#000000"  # Black background for Android splash screen.
+  color_ios: "#000000"  # Black background for iOS splash screen.
+
+  # Orange color theme on both platforms:
+  color_dark_android: "#1A1A1A"  # Darker shade for dark mode on Android.
+  color_dark_ios: "#1A1A1A"  # Darker shade for dark mode on iOS.
+
+  # Full-screen option for Android to make the splash screen immersive.
+  fullscreen: true  # Hide the notification bar.
+
+  # Optional: If you want to set specific splash background color for different platforms:
+  color_web: "#FF7F32"  # Highlighting orange for the web splash screen.
+  background_image_web: "assets/images/logo.png"  # Keep the logo in web as well.
+
+  # Branding settings.
+  branding: "assets/images/logo.png"  # Branding can be used in the splash screen (if needed).
+
+  # Platform-specific splash configurations (Android, iOS, Web).
+  android_gravity: center  # Position the splash content at the center of the screen.
+  ios_content_mode: center  # Same for iOS, content is centered.
+
+  # Commands to run the configuration:
+  # To apply changes:
+  # Run the following command in the terminal:
+  # dart run flutter_native_splash:create
+
+  # To remove the splash screen or reset it to the default white background:
+  # dart run flutter_native_splash:remove
+

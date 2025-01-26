@@ -171,6 +171,7 @@ enum Type {
   Movie,
   Special,
   Null,
+  Music
 }
 
 class Anime {

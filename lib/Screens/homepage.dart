@@ -1,5 +1,6 @@
 import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:otaku_stream/Screens/anime_detail.dart';
 import 'package:otaku_stream/Widgets/hamburger.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +40,7 @@ class _AnimeHomeScreenState extends State<AnimeHomeScreen> {
         elevation: 0,
         backgroundColor: Colors.black,
         leading: IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white, size: 33,),
+            icon: const Icon(Icons.menu, color: Colors.orange, size: 33,),
             onPressed: () {
               _scaffoldKey.currentState?.openDrawer();
             },
@@ -48,16 +49,20 @@ class _AnimeHomeScreenState extends State<AnimeHomeScreen> {
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10), // Add spacing on the right
             child: CircleAvatar(
-              radius: 27,
-              backgroundImage: NetworkImage(
-                "https://via.placeholder.com/150",
-              ),
+              radius: 32,
+              backgroundImage: AssetImage("assets/images/logo.png"), // Change to your asset path
             ),
           ),
         ],
       ),
       body: animeProvider.homeAnime == null
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: 500,
+          child: Lottie.asset('assets/animations/animation2.json'),
+        ),
+      )
           : SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,36 +338,6 @@ class ListCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(16.0),
-            //   child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Text(
-            //         title,
-            //         style: const TextStyle(
-            //           fontSize: 18,
-            //           fontWeight: FontWeight.bold,
-            //           color: Colors.white,
-            //         ),
-            //         maxLines: 1,
-            //         overflow: TextOverflow.ellipsis,
-            //       ),
-            //       const SizedBox(height: 8),
-            //       Text(
-            //         genres,
-            //         style: const TextStyle(
-            //           fontSize: 12,
-            //           color: Color(0xFFFFA726),
-            //         ),
-            //         maxLines: 1,
-            //         overflow: TextOverflow.ellipsis,
-            //       ),
-            //       const SizedBox(height: 8),
-            //     ],
-            //   ),
-            // ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SizedBox(
