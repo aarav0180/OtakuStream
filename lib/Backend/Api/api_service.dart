@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'https://anime-kohl-five.vercel.app/api/v2';
+  static const String baseUrl = 'BASE-URL';
 
   static Future<Map<String, dynamic>> fetchHomeAnime() async {
-    final response = await http.get(Uri.parse('$baseUrl/hianime/home'));
+    final response = await http.get(Uri.parse('/endpoint1'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -16,7 +16,7 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> fetchAnimeDetail(String id) async {
-    final response = await http.get(Uri.parse('$baseUrl/hianime/anime/$id'));
+    final response = await http.get(Uri.parse('/endpoint2'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -27,7 +27,7 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> fetchEpisodes(String animeId) async {
-    final response = await http.get(Uri.parse('$baseUrl/hianime/anime/$animeId/episodes'));
+    final response = await http.get(Uri.parse('/endpoint3'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -37,7 +37,7 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> fetchEpisodeServers(String animeEpisodeId) async {
-    final response = await http.get(Uri.parse('$baseUrl/hianime/episode/servers?animeEpisodeId=$animeEpisodeId'));
+    final response = await http.get(Uri.parse('/endpoint4'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -48,7 +48,7 @@ class ApiService {
 
   static Future<Map<String, dynamic>> fetchEpisodeSources(String animeEpisodeId, String server, String category) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/hianime/episode/sources?animeEpisodeId=$animeEpisodeId&server=$server&category=$category'),
+      Uri.parse('/endpoint4'),
     );
 
     if (response.statusCode == 200) {
