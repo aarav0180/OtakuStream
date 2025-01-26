@@ -40,11 +40,12 @@ Ready to get started? Follow these steps:
 ---
 
 ## 🖼️ **Screenshots**  
-_(Add your images below to showcase the app in action!)_  
 
-| Home Screen 🏠 | Saved Animes 📂 | Anime Details 🔍 |  
-|----------------|-----------------|------------------|  
-| *(Insert image)* | *(Insert image)* | *(Insert image)* |  
+
+![Imageq](https://github.com/user-attachments/assets/e7453bf8-cd63-4a87-8dba-a5e3cf674d52)  |  ![Image2](https://github.com/user-attachments/assets/1e396b44-bb9a-4a2d-802d-bb13d6e47f1f)  |  ![Image3](https://github.com/user-attachments/assets/b94698fc-6a57-4979-bd84-16eb6daf27ac)  |  ![Image4](https://github.com/user-attachments/assets/36a07cd3-5fa8-4c5c-8179-6abba4ce271a)  |  ![Image5](https://github.com/user-attachments/assets/f780bd79-d034-4628-bbf3-52c0e60d4cea)
+
+
+
 
 ---
 
