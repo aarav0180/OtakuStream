@@ -41,12 +41,12 @@ Ready to get started? Follow these steps:
 
 ## 🖼️ **Screenshots**
 
-<div style="display: flex; justify-content: space-between; gap: 10px;">
-  <img src="https://github.com/user-attachments/assets/e7453bf8-cd63-4a87-8dba-a5e3cf674d52" alt="Image 1" width="150"/>
-  <img src="https://github.com/user-attachments/assets/1e396b44-bb9a-4a2d-802d-bb13d6e47f1f" alt="Image 2" width="150"/>
-  <img src="https://github.com/user-attachments/assets/b94698fc-6a57-4979-bd84-16eb6daf27ac" alt="Image 3" width="150"/>
-  <img src="https://github.com/user-attachments/assets/36a07cd3-5fa8-4c5c-8179-6abba4ce271a" alt="Image 4" width="150"/>
-  <img src="https://github.com/user-attachments/assets/f780bd79-d034-4628-bbf3-52c0e60d4cea" alt="Image 5" width="150"/>
+<div style="display: flex; justify-content: space-between; gap: 5px;">
+  <img src="https://github.com/user-attachments/assets/e7453bf8-cd63-4a87-8dba-a5e3cf674d52" alt="Image 1" width="140"/>
+  <img src="https://github.com/user-attachments/assets/1e396b44-bb9a-4a2d-802d-bb13d6e47f1f" alt="Image 2" width="140"/>
+  <img src="https://github.com/user-attachments/assets/b94698fc-6a57-4979-bd84-16eb6daf27ac" alt="Image 3" width="140"/>
+  <img src="https://github.com/user-attachments/assets/36a07cd3-5fa8-4c5c-8179-6abba4ce271a" alt="Image 4" width="140"/>
+  <img src="https://github.com/user-attachments/assets/f780bd79-d034-4628-bbf3-52c0e60d4cea" alt="Image 5" width="140"/>
 </div>
 
 ---
