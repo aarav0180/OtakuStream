@@ -111,14 +111,14 @@ class _SavedAnimeScreenState extends State<SavedAnimeScreen> {
           : _savedAnimes.isEmpty
            ? Center(
     child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           "Oops! Nothing to show here.",
           style: GoogleFonts.poppins(
             color: Colors.orange,
-            fontSize: 24,
+            fontSize: MediaQuery.of(context).size.width * 0.06, // Responsive font size
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -131,13 +131,13 @@ class _SavedAnimeScreenState extends State<SavedAnimeScreen> {
           'Try adding some animes to your list!',
           style: GoogleFonts.poppins(
             color: Colors.orange,
-            fontSize: 20,
+            fontSize: MediaQuery.of(context).size.width * 0.05, // Responsive font size
             fontWeight: FontWeight.bold,
           ),
         ),
       ],
-    ),
     )
+      )
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.builder(
