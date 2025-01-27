@@ -41,7 +41,7 @@ Ready to get started? Follow these steps:
 
 ## 🖼️ **Screenshots**
 
-<div style="display: flex; justify-content: space-between; gap: 10px;">
+<div style="display: flex; justify-content: space-between; gap: 5px;">
   <img src="https://github.com/user-attachments/assets/e7453bf8-cd63-4a87-8dba-a5e3cf674d52" alt="Image 1" width="150"/>
   <img src="https://github.com/user-attachments/assets/1e396b44-bb9a-4a2d-802d-bb13d6e47f1f" alt="Image 2" width="150"/>
   <img src="https://github.com/user-attachments/assets/b94698fc-6a57-4979-bd84-16eb6daf27ac" alt="Image 3" width="150"/>
