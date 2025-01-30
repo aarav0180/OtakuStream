@@ -1,4 +1,7 @@
-# 🌸 Otaku Stream 🎥✨  
+# 🌸 Otaku Stream 🎥✨
+
+**Check it out here!** : (Download the app)[https://aarav0180.github.io/Otaku_landing/]
+
 **Your Gateway to the World of Anime!**  
 
 Welcome to **Otaku Stream**, the ultimate anime companion app where you can save, discover, and immerse yourself in the vibrant world of anime. Whether you're a casual viewer or a die-hard otaku, Otaku Stream is built to make your anime experience unforgettable!  
