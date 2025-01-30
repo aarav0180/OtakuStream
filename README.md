@@ -1,6 +1,6 @@
 # 🌸 Otaku Stream 🎥✨
 
-**Check it out here!** : (Download the app)[https://aarav0180.github.io/Otaku_landing/]
+**Check it out here!** : [Download the app](https://aarav0180.github.io/Otaku_landing/)
 
 **Your Gateway to the World of Anime!**  
 
