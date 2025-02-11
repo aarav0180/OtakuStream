@@ -18,6 +18,9 @@ class MovieDetailPage extends StatefulWidget {
 }
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
+
+  bool _showFullDescription = false;
+
   @override
   void initState() {
     super.initState();
@@ -61,322 +64,679 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               child: Lottie.asset('assets/animations/animation2.json'),
             ),
         )
-          : SizedBox(
-        height: MediaQuery.of(context).size.height, // Full screen height
-        child: Column(
-          children: [
-            // Upper Half with Poster and Gradient
-            Stack(
-              children: [
-                // Poster Image
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.35, // Half of the screen height
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(detailProvider.animeDetail!.data.anime?.info?.poster ?? ""),
-                      fit: BoxFit.cover,
+          : CustomScrollView(
+        slivers: [
+          // SliverAppBar with the poster image
+          SliverAppBar(
+            backgroundColor: Colors.black,
+            elevation: 0,
+            expandedHeight: MediaQuery.of(context).size.height * 0.35,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                children: [
+                  // Poster Image
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(detailProvider.animeDetail!
+                            .data.anime?.info?.poster ??
+                            ""),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                // Gradient Overlay
-                Positioned.fill(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.35,
+                  // Gradient overlay for a nice effect
+                  Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.transparent, Colors.black],
+                        colors: [Colors.transparent,Colors.transparent,Colors.transparent, Colors.black],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-
-            // Lower Half Components
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.black, Colors.black87, Colors.orange],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
+          ),
+          // SliverToBoxAdapter for the rest of the content
+          SliverToBoxAdapter(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.black, Colors.black87, Colors.orange],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 40),
+                    // Title and Studio
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 40), // Top spacing
-
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              detailProvider.animeDetail!.data.anime?.info?.name ?? "",
-                              style: const TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                              overflow: TextOverflow.ellipsis, // Ensures the name does not overflow
-                            ),
-                            const SizedBox(height: 7),
-                            Text(
-                              detailProvider.animeDetail!.data.anime?.moreInfo?.studios ?? "",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          detailProvider.animeDetail!.data.anime?.info?.name ??
+                              "",
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-
-
-                        const SizedBox(height: 14),
-                        SizedBox(
-                          height: 30, // Restrict height to make it more compact
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: detailProvider.animeDetail!.data.anime?.moreInfo?.genres!.length,
-                            itemBuilder: (context, index) {
-                              final genre = detailProvider.animeDetail!.data.anime?.moreInfo?.genres![index];
-                              return Container(
-                                margin: const EdgeInsets.only(right: 8),
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white24, // Background color for genres
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Text(
-                                  genre ?? "",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              );
-                            },
+                        const SizedBox(height: 7),
+                        Text(
+                          detailProvider.animeDetail!.data.anime?.moreInfo
+                              ?.studios ??
+                              "",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white70,
                           ),
                         ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    SizedBox(
+                      height: 30, // Restrict height to make it more compact
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: detailProvider.animeDetail!.data.anime?.moreInfo?.genres!.length,
+                        itemBuilder: (context, index) {
+                          final genre = detailProvider.animeDetail!.data.anime?.moreInfo?.genres![index];
+                          return Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.white24, // Background color for genres
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Text(
+                              genre ?? "",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
 
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            _InfoChip(
-                              label: detailProvider.animeDetail!.data.anime?.info?.stats?.type ?? "",
-                              icon: Icons.tv,
-                            ),
-                            const SizedBox(width: 8),
-                            _InfoChip(
-                              label: detailProvider.animeDetail!.data.anime?.info?.stats?.duration ?? "",
-                              icon: Icons.timer,
-                            ),
-                            const SizedBox(width: 8),
-                            _InfoChip(
-                              label: detailProvider.animeDetail!.data.anime?.moreInfo?.status ?? "",
-                              icon: Icons.check_circle,
-                            ),
-                          ],
+                    const SizedBox(height: 16),
+
+                    Row(
+                      children: [
+                        _InfoChip(
+                          label: detailProvider.animeDetail!.data.anime?.info?.stats?.type ?? "",
+                          icon: Icons.tv,
                         ),
-                        const SizedBox(height: 16),
-                        // Description
+                        const SizedBox(width: 8),
+                        _InfoChip(
+                          label: detailProvider.animeDetail!.data.anime?.info?.stats?.duration ?? "",
+                          icon: Icons.timer,
+                        ),
+                        const SizedBox(width: 8),
+                        _InfoChip(
+                          label: detailProvider.animeDetail!.data.anime?.moreInfo?.status ?? "",
+                          icon: Icons.check_circle,
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Description section with expandable text
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          detailProvider.animeDetail!.data.anime?.info?.description ?? "",
+                          detailProvider.animeDetail!
+                              .data.anime?.info?.description ??
+                              "",
+                          maxLines: _showFullDescription ? null : 4,
+                          overflow: _showFullDescription
+                              ? TextOverflow.visible
+                              : TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white70,
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        // Cast Section
-                        const Text(
-                          'Cast',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-
-                        SizedBox(
-                          height: 150,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal, // Horizontal scrolling
-                            itemCount: detailProvider.animeDetail!.data.anime?.info?.charactersVoiceActors!.length,
-                            itemBuilder: (context, index) {
-                              final cast = detailProvider.animeDetail!.data.anime?.info?.charactersVoiceActors![index];
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 30),
-                                child: Column(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 40,
-                                      backgroundImage: NetworkImage(cast?.voiceActor?.poster ?? ""),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      cast?.voiceActor?.name ?? "",
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.white70,
-                                      ),
-                                    ),
-                                    Text(
-                                      'As ${cast?.character?.name ?? ""}',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.white70,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Watch Later
-                            GestureDetector(
-                              onTap: () async {
-                                final detailProvider = Provider.of<DetailProvider>(context, listen: false);
-                                final animeDetail = detailProvider.animeDetail?.data.anime;
-
-                                if (animeDetail != null) {
-                                  final animeData = {
-                                    'id': widget.id,
-                                    'name': animeDetail.info?.name ?? "",
-                                    'poster': animeDetail.info?.poster ?? "",
-                                    'description': animeDetail.info?.description ?? "",
-                                    'genres': animeDetail.moreInfo?.genres ?? [],
-                                    'status': animeDetail.moreInfo?.status ?? "",
-                                    'studios': animeDetail.moreInfo?.studios ?? "",
-                                    'charactersVoiceActors': animeDetail.info?.charactersVoiceActors?.map((cast) {
-                                      return {
-                                        'name': cast.voiceActor?.name,
-                                        'poster': cast.voiceActor?.poster,
-                                        'characterName': cast.character?.name,
-                                      };
-                                    }).toList() ?? [],
-                                  };
-
-                                  await LaterAnimeCache.saveAnimeToCache(widget.id, animeData);
-                                  showCustomSnackBar(context, "Yay! The anime is saved successfully");
-
-                                } else {
-                                  showCustomSnackBar(context, "Oops! Something went wrong while saving. Please check your connection or report the issue.");
-                                }
-                              },
-                              child: AnimatedContainer(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 30, vertical: 15),
-                                duration: const Duration(milliseconds: 500),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.orange, width: 1.5),
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Watch Later',
-                                    style: GoogleFonts.poppins(
-                                      color: const Color(0xFFFFA726),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16
-                                    ),
-                                  ),
-                                ),
-                              ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _showFullDescription = !_showFullDescription;
+                            });
+                          },
+                          child: Text(
+                            _showFullDescription ? "Show Less" : "Show More",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.orange,
+                              fontWeight: FontWeight.bold,
                             ),
-
-                            const SizedBox(width: 10),
-
-                            // Watch Now Button
-                            Center(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  final episodeProvider = Provider.of<EpisodeProvider>(context, listen: false);
-
-                                  final serverProvider = Provider.of<ServerProvider>(context, listen: false);
-                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                    serverProvider.fetchAndCacheServers(episodeProvider.episodeData!.data.episodes[0].episodeId);
-                                  });
-                                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AdvancedVideoPlayer()));
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 30, vertical: 15),
-                                  backgroundColor: Colors.orange,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Watch Now',
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Similar Anime Section
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Related Animes",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              SizedBox(
-                                height: 300, // Adjust height based on card size
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: detailProvider.animeDetail?.data.relatedAnimes?.length ?? 0,
-                                  itemBuilder: (context, index) {
-                                    final relatedAnime = detailProvider.animeDetail?.data.relatedAnimes![index];
-                                    return ListCard(
-                                      imageUrl:  relatedAnime!.poster ?? "",
-                                      title: relatedAnime.name ?? "",
-                                      genres: " SUB: ${relatedAnime.episodes?.sub ?? 0} || DUB: ${relatedAnime.episodes?.dub ?? 0}",
-                                      id: relatedAnime.id ?? "",
-                                    );
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 60,),
-                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
+
+
+                    const SizedBox(height: 20),
+                    // Cast Section
+                    Text(
+                      detailProvider.animeDetail!.data.anime?.info?.charactersVoiceActors!.length != 0
+                          ? 'Cast'
+                          : 'No Cast Data Available',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    if(detailProvider.animeDetail!.data.anime?.info?.charactersVoiceActors!.length != 0 )
+                      SizedBox(
+                        height: 150,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal, // Horizontal scrolling
+                          itemCount: detailProvider.animeDetail!.data.anime?.info?.charactersVoiceActors!.length,
+                          itemBuilder: (context, index) {
+                            final cast = detailProvider.animeDetail!.data.anime?.info?.charactersVoiceActors![index];
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 30),
+                              child: Column(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 40,
+                                    backgroundImage: NetworkImage(cast?.voiceActor?.poster ?? ""),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    cast?.voiceActor?.name ?? "",
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  Text(
+                                    'As ${cast?.character?.name ?? ""}',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+
+
+                    const SizedBox(height: 20),
+
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Watch Later
+                        GestureDetector(
+                          onTap: () async {
+                            final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+                            final animeDetail = detailProvider.animeDetail?.data.anime;
+
+                            if (animeDetail != null) {
+                              final animeData = {
+                                'id': widget.id,
+                                'name': animeDetail.info?.name ?? "",
+                                'poster': animeDetail.info?.poster ?? "",
+                                'description': animeDetail.info?.description ?? "",
+                                'genres': animeDetail.moreInfo?.genres ?? [],
+                                'status': animeDetail.moreInfo?.status ?? "",
+                                'studios': animeDetail.moreInfo?.studios ?? "",
+                                'charactersVoiceActors': animeDetail.info?.charactersVoiceActors?.map((cast) {
+                                  return {
+                                    'name': cast.voiceActor?.name,
+                                    'poster': cast.voiceActor?.poster,
+                                    'characterName': cast.character?.name,
+                                  };
+                                }).toList() ?? [],
+                              };
+
+                              await LaterAnimeCache.saveAnimeToCache(widget.id, animeData);
+                              showCustomSnackBar(context, "Yay! The anime is saved successfully");
+
+                            } else {
+                              showCustomSnackBar(context, "Oops! Something went wrong while saving. Please check your connection or report the issue.");
+                            }
+                          },
+                          child: AnimatedContainer(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 15),
+                            duration: const Duration(milliseconds: 500),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.orange, width: 1.5),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Watch Later',
+                                style: GoogleFonts.poppins(
+                                    color: const Color(0xFFFFA726),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        // Watch Now Button
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              final episodeProvider = Provider.of<EpisodeProvider>(context, listen: false);
+
+                              final serverProvider = Provider.of<ServerProvider>(context, listen: false);
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                serverProvider.fetchAndCacheServers(episodeProvider.episodeData!.data.episodes[0].episodeId);
+                              });
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdvancedVideoPlayer()));
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 15),
+                              backgroundColor: Colors.orange,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              'Watch Now',
+                              style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Similar Anime Section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Related Animes",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            height: 300, // Adjust height based on card size
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: detailProvider.animeDetail?.data.relatedAnimes?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final relatedAnime = detailProvider.animeDetail?.data.relatedAnimes![index];
+                                return ListCard(
+                                  imageUrl:  relatedAnime!.poster ?? "",
+                                  title: relatedAnime.name ?? "",
+                                  genres: " SUB: ${relatedAnime.episodes?.sub ?? 0} || DUB: ${relatedAnime.episodes?.dub ?? 0}",
+                                  id: relatedAnime.id ?? "",
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 60,),
+                        ],
+                      ),
+                    ),
+
+
+                    const SizedBox(height: 60),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+
+      // SizedBox(
+      //   height: MediaQuery.of(context).size.height, // Full screen height
+      //   child: Column(
+      //     children: [
+      //       // Upper Half with Poster and Gradient
+      //       Stack(
+      //         children: [
+      //           // Poster Image
+      //           Container(
+      //             height: MediaQuery.of(context).size.height * 0.35, // Half of the screen height
+      //             decoration: BoxDecoration(
+      //               image: DecorationImage(
+      //                 image: NetworkImage(detailProvider.animeDetail!.data.anime?.info?.poster ?? ""),
+      //                 fit: BoxFit.cover,
+      //               ),
+      //             ),
+      //           ),
+      //           // Gradient Overlay
+      //           Positioned.fill(
+      //             child: Container(
+      //               height: MediaQuery.of(context).size.height * 0.35,
+      //               decoration: const BoxDecoration(
+      //                 gradient: LinearGradient(
+      //                   colors: [Colors.transparent, Colors.black],
+      //                   begin: Alignment.topCenter,
+      //                   end: Alignment.bottomCenter,
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //
+      //       // Lower Half Components
+      //       Expanded(
+      //         child: SingleChildScrollView(
+      //           child: Container(
+      //             decoration: const BoxDecoration(
+      //               gradient: LinearGradient(
+      //                 colors: [Colors.black, Colors.black87, Colors.orange],
+      //                 begin: Alignment.topCenter,
+      //                 end: Alignment.bottomCenter,
+      //               ),
+      //             ),
+      //             child: Padding(
+      //               padding: const EdgeInsets.all(20.0),
+      //               child: Column(
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 children: [
+      //                   const SizedBox(height: 40), // Top spacing
+      //
+      //                   Column(
+      //                     crossAxisAlignment: CrossAxisAlignment.start,
+      //                     children: [
+      //                       Text(
+      //                         detailProvider.animeDetail!.data.anime?.info?.name ?? "",
+      //                         style: const TextStyle(
+      //                           fontSize: 32,
+      //                           fontWeight: FontWeight.bold,
+      //                           color: Colors.white,
+      //                         ),
+      //                         overflow: TextOverflow.ellipsis, // Ensures the name does not overflow
+      //                       ),
+      //                       const SizedBox(height: 7),
+      //                       Text(
+      //                         detailProvider.animeDetail!.data.anime?.moreInfo?.studios ?? "",
+      //                         style: const TextStyle(
+      //                           fontSize: 16,
+      //                           color: Colors.white70,
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //
+      //
+      //                   const SizedBox(height: 14),
+      //                   SizedBox(
+      //                     height: 30, // Restrict height to make it more compact
+      //                     child: ListView.builder(
+      //                       scrollDirection: Axis.horizontal,
+      //                       itemCount: detailProvider.animeDetail!.data.anime?.moreInfo?.genres!.length,
+      //                       itemBuilder: (context, index) {
+      //                         final genre = detailProvider.animeDetail!.data.anime?.moreInfo?.genres![index];
+      //                         return Container(
+      //                           margin: const EdgeInsets.only(right: 8),
+      //                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      //                           decoration: BoxDecoration(
+      //                             color: Colors.white24, // Background color for genres
+      //                             borderRadius: BorderRadius.circular(15),
+      //                           ),
+      //                           child: Text(
+      //                             genre ?? "",
+      //                             style: const TextStyle(
+      //                               fontSize: 14,
+      //                               color: Colors.white,
+      //                             ),
+      //                           ),
+      //                         );
+      //                       },
+      //                     ),
+      //                   ),
+      //
+      //                   const SizedBox(height: 16),
+      //                   Row(
+      //                     children: [
+      //                       _InfoChip(
+      //                         label: detailProvider.animeDetail!.data.anime?.info?.stats?.type ?? "",
+      //                         icon: Icons.tv,
+      //                       ),
+      //                       const SizedBox(width: 8),
+      //                       _InfoChip(
+      //                         label: detailProvider.animeDetail!.data.anime?.info?.stats?.duration ?? "",
+      //                         icon: Icons.timer,
+      //                       ),
+      //                       const SizedBox(width: 8),
+      //                       _InfoChip(
+      //                         label: detailProvider.animeDetail!.data.anime?.moreInfo?.status ?? "",
+      //                         icon: Icons.check_circle,
+      //                       ),
+      //                     ],
+      //                   ),
+      //                   const SizedBox(height: 16),
+      //                   // Description
+      //                   Text(
+      //                     detailProvider.animeDetail!.data.anime?.info?.description ?? "",
+      //                     style: const TextStyle(
+      //                       fontSize: 14,
+      //                       color: Colors.white70,
+      //                     ),
+      //                   ),
+      //                   const SizedBox(height: 20),
+      //                   // Cast Section
+      //                   const Text(
+      //                     'Cast',
+      //                     style: TextStyle(
+      //                       fontSize: 18,
+      //                       fontWeight: FontWeight.bold,
+      //                       color: Colors.white,
+      //                     ),
+      //                   ),
+      //                   const SizedBox(height: 12),
+      //
+      //                   SizedBox(
+      //                     height: 150,
+      //                     child: ListView.builder(
+      //                       scrollDirection: Axis.horizontal, // Horizontal scrolling
+      //                       itemCount: detailProvider.animeDetail!.data.anime?.info?.charactersVoiceActors!.length,
+      //                       itemBuilder: (context, index) {
+      //                         final cast = detailProvider.animeDetail!.data.anime?.info?.charactersVoiceActors![index];
+      //                         return Padding(
+      //                           padding: const EdgeInsets.only(right: 30),
+      //                           child: Column(
+      //                             children: [
+      //                               CircleAvatar(
+      //                                 radius: 40,
+      //                                 backgroundImage: NetworkImage(cast?.voiceActor?.poster ?? ""),
+      //                               ),
+      //                               const SizedBox(height: 8),
+      //                               Text(
+      //                                 cast?.voiceActor?.name ?? "",
+      //                                 style: const TextStyle(
+      //                                   fontSize: 12,
+      //                                   color: Colors.white70,
+      //                                 ),
+      //                               ),
+      //                               Text(
+      //                                 'As ${cast?.character?.name ?? ""}',
+      //                                 style: const TextStyle(
+      //                                   fontSize: 12,
+      //                                   color: Colors.white70,
+      //                                 ),
+      //                               ),
+      //                             ],
+      //                           ),
+      //                         );
+      //                       },
+      //                     ),
+      //                   ),
+      //
+      //                   const SizedBox(height: 20),
+      //
+      //                   Row(
+      //                     crossAxisAlignment: CrossAxisAlignment.center,
+      //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //                     children: [
+      //                       // Watch Later
+      //                       GestureDetector(
+      //                         onTap: () async {
+      //                           final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+      //                           final animeDetail = detailProvider.animeDetail?.data.anime;
+      //
+      //                           if (animeDetail != null) {
+      //                             final animeData = {
+      //                               'id': widget.id,
+      //                               'name': animeDetail.info?.name ?? "",
+      //                               'poster': animeDetail.info?.poster ?? "",
+      //                               'description': animeDetail.info?.description ?? "",
+      //                               'genres': animeDetail.moreInfo?.genres ?? [],
+      //                               'status': animeDetail.moreInfo?.status ?? "",
+      //                               'studios': animeDetail.moreInfo?.studios ?? "",
+      //                               'charactersVoiceActors': animeDetail.info?.charactersVoiceActors?.map((cast) {
+      //                                 return {
+      //                                   'name': cast.voiceActor?.name,
+      //                                   'poster': cast.voiceActor?.poster,
+      //                                   'characterName': cast.character?.name,
+      //                                 };
+      //                               }).toList() ?? [],
+      //                             };
+      //
+      //                             await LaterAnimeCache.saveAnimeToCache(widget.id, animeData);
+      //                             showCustomSnackBar(context, "Yay! The anime is saved successfully");
+      //
+      //                           } else {
+      //                             showCustomSnackBar(context, "Oops! Something went wrong while saving. Please check your connection or report the issue.");
+      //                           }
+      //                         },
+      //                         child: AnimatedContainer(
+      //                           padding: const EdgeInsets.symmetric(
+      //                               horizontal: 30, vertical: 15),
+      //                           duration: const Duration(milliseconds: 500),
+      //                           decoration: BoxDecoration(
+      //                             border: Border.all(color: Colors.orange, width: 1.5),
+      //                             borderRadius: BorderRadius.circular(12.0),
+      //                           ),
+      //                           child: Center(
+      //                             child: Text(
+      //                               'Watch Later',
+      //                               style: GoogleFonts.poppins(
+      //                                 color: const Color(0xFFFFA726),
+      //                                 fontWeight: FontWeight.bold,
+      //                                 fontSize: 16
+      //                               ),
+      //                             ),
+      //                           ),
+      //                         ),
+      //                       ),
+      //
+      //                       const SizedBox(width: 10),
+      //
+      //                       // Watch Now Button
+      //                       Center(
+      //                         child: ElevatedButton(
+      //                           onPressed: () {
+      //                             final episodeProvider = Provider.of<EpisodeProvider>(context, listen: false);
+      //
+      //                             final serverProvider = Provider.of<ServerProvider>(context, listen: false);
+      //                             WidgetsBinding.instance.addPostFrameCallback((_) {
+      //                               serverProvider.fetchAndCacheServers(episodeProvider.episodeData!.data.episodes[0].episodeId);
+      //                             });
+      //                             Navigator.push(context, MaterialPageRoute(builder: (_) => const AdvancedVideoPlayer()));
+      //                           },
+      //                           style: ElevatedButton.styleFrom(
+      //                             padding: const EdgeInsets.symmetric(
+      //                                 horizontal: 30, vertical: 15),
+      //                             backgroundColor: Colors.orange,
+      //                             shape: RoundedRectangleBorder(
+      //                               borderRadius: BorderRadius.circular(12),
+      //                             ),
+      //                           ),
+      //                           child: Text(
+      //                             'Watch Now',
+      //                             style: GoogleFonts.poppins(
+      //                                 color: Colors.black,
+      //                                 fontWeight: FontWeight.bold,
+      //                                 fontSize: 16
+      //                             ),
+      //                           ),
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //
+      //                   // Similar Anime Section
+      //                   Padding(
+      //                     padding: const EdgeInsets.symmetric(vertical: 16.0),
+      //                     child: Column(
+      //                       crossAxisAlignment: CrossAxisAlignment.start,
+      //                       children: [
+      //                         const Text(
+      //                           "Related Animes",
+      //                           style: TextStyle(
+      //                             fontSize: 20,
+      //                             fontWeight: FontWeight.bold,
+      //                             color: Colors.white,
+      //                           ),
+      //                         ),
+      //                         const SizedBox(height: 16),
+      //                         SizedBox(
+      //                           height: 300, // Adjust height based on card size
+      //                           child: ListView.builder(
+      //                             scrollDirection: Axis.horizontal,
+      //                             itemCount: detailProvider.animeDetail?.data.relatedAnimes?.length ?? 0,
+      //                             itemBuilder: (context, index) {
+      //                               final relatedAnime = detailProvider.animeDetail?.data.relatedAnimes![index];
+      //                               return ListCard(
+      //                                 imageUrl:  relatedAnime!.poster ?? "",
+      //                                 title: relatedAnime.name ?? "",
+      //                                 genres: " SUB: ${relatedAnime.episodes?.sub ?? 0} || DUB: ${relatedAnime.episodes?.dub ?? 0}",
+      //                                 id: relatedAnime.id ?? "",
+      //                               );
+      //                             },
+      //                           ),
+      //                         ),
+      //                         const SizedBox(height: 60,),
+      //                       ],
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //           ),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

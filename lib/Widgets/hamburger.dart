@@ -29,7 +29,7 @@ class _AnimeAppMenuState extends State<AnimeAppMenu> {
       ),
       MenuItem(
         icon: Icons.movie,
-        title: "Latest Animes",
+        title: "Upcoming Animes",
         onTap: () {
           Navigator.push(
             context,

@@ -69,7 +69,7 @@ class _LatestAnimesState extends State<LatestAnimes> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Latest Animes",
+          "Upcoming Animes",
           style: GoogleFonts.poppins(
             color: Colors.orange,
             fontSize: 24,
@@ -167,7 +167,7 @@ class ListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => MovieDetailPage(id: id,)));
+        //Navigator.push(context, MaterialPageRoute(builder: (_) => MovieDetailPage(id: id,)));
       },
       child: Padding(
         padding: const EdgeInsets.only(right: 9.0),

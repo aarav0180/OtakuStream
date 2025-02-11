@@ -383,6 +383,7 @@
 //   }
 // }
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -393,6 +394,7 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:wakelock_plus/wakelock_plus.dart';
 import '../Providers/episode_provider.dart';
 import '../Providers/stream_provider.dart';
 
@@ -406,7 +408,7 @@ class AdvancedVideoPlayer extends StatefulWidget {
 class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
   VideoPlayerController? _controller;
   final List<String> _subDubOptions = ["sub", "dub"];
-  Map<String, List<String>> _serverOptions = {
+  final Map<String, List<String>> _serverOptions = {
     "sub": ["hd-1", "hd-2"],
     "dub": ["hd-1", "hd-2"]
   };
@@ -420,11 +422,14 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
   late Ticker _ticker;
   Duration _currentTime = Duration.zero;
   int episodeNo = 0;
+  Timer? _hideControlsTimer;
+  bool _controlsVisible = false;
 
   @override
   void initState() {
     super.initState();
     _initializeWithProvider(episodeNo);
+    WakelockPlus.enable();
   }
 
   void _onTick(Duration elapsed) {
@@ -434,34 +439,6 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
       });
     }
   }
-
-  // Future<void> _initializeWithProvider(int episodeNo) async {
-  //   final episodeProvider = Provider.of<EpisodeProvider>(context, listen: false);
-  //   final streamProvider = Provider.of<StreamingProvider>(context, listen: false);
-  //
-  //   try {
-  //     // Fetch data for the stream provider
-  //     await streamProvider.fetchAndCacheLinks(
-  //       episodeProvider.episodeData!.data.episodes[episodeNo].episodeId,
-  //       _selectedServer,
-  //       _selectedSubDub,
-  //     );
-  //
-  //     _ticker = Ticker(_onTick);
-  //
-  //     // Use Future.delayed to ensure this runs after the current build cycle
-  //     WidgetsBinding.instance.addPostFrameCallback((_) async {
-  //       // Ensure the provider's data is ready
-  //       if (streamProvider.streamData?.data != null) {
-  //         await _initializePlayer();
-  //       } else {
-  //         debugPrint("Stream provider data is null.");
-  //       }
-  //     });
-  //   } catch (e) {
-  //     debugPrint("Error in _initializeWithProvider: $e");
-  //   }
-  // }
 
   Future<void> _initializeWithProvider(int episodeNo) async {
     final episodeProvider = Provider.of<EpisodeProvider>(context, listen: false);
@@ -492,6 +469,28 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
     }
   }
 
+  void _showControls() {
+    setState(() {
+      _controlsVisible = true;
+    });
+    // Cancel any existing timer.
+    _hideControlsTimer?.cancel();
+    _hideControlsTimer = Timer(const Duration(seconds: 3), () {
+      setState(() {
+        _controlsVisible = false;
+      });
+    });
+  }
+
+  void _togglePlayPause() {
+    setState(() {
+      if (_controller?.value.isPlaying == true) {
+        _controller?.pause();
+      } else {
+        _controller?.play();
+      }
+    });
+  }
 
   Future<void> _initializePlayer() async {
     setState(() {
@@ -522,7 +521,7 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
       }
 
       // Initialize the video player
-      _controller = VideoPlayerController.network(videoUrl)
+      _controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl))
         ..initialize().then((_) {
           setState(() {
             _isLoading = false;
@@ -568,6 +567,7 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
     _controller?.dispose();
     _ticker.stop();
     _ticker.dispose();
+    WakelockPlus.disable();
     super.dispose();
   }
   void _changePlaybackSpeed(double speed) {
@@ -859,55 +859,77 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        // AspectRatio for video to maintain correct aspect ratio
-        AspectRatio(
-          aspectRatio: _controller?.value.isInitialized == true
-              ? (_isFullscreen ? screenWidth / screenHeight : _controller!.value.aspectRatio)
-              : 16 / 9,
-          child: _controller?.value.isInitialized == true
-              ? VideoPlayer(_controller!)
-              : const Center(
-            child: SpinKitFadingCircle(
-              color: Colors.orange,
-              size: 50.0,
+    double aspectRatio = 16 / 9;
+
+    return GestureDetector(
+      onTap: _showControls,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // AspectRatio for video to maintain correct aspect ratio
+          AspectRatio(
+            aspectRatio: aspectRatio,
+            // _controller?.value.isInitialized == true
+            //     ? (_isFullscreen ? screenWidth / screenHeight : _controller!.value.aspectRatio)
+            //     : 16 / 9,
+            child: _controller?.value.isInitialized == true
+                ? VideoPlayer(_controller!)
+                : const Center(
+              child: SpinKitFadingCircle(
+                color: Colors.orange,
+                size: 50.0,
+              ),
             ),
           ),
-        ),
 
-        // Subtitles
-        if (_areSubtitlesVisible) _buildSubtitles(),
+          // Subtitles
+          if (_areSubtitlesVisible) _buildSubtitles(),
 
-        if (_controller?.value.isInitialized == true)
-          Positioned(
-            bottom: isPortrait ? 0 : 0,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-
-                VideoProgressIndicator(
-                  _controller!,
-                  allowScrubbing: true,
-                  colors: const VideoProgressColors(
-                    playedColor: Colors.orange,
-                    bufferedColor: Colors.grey,
-                    backgroundColor: Colors.black,
-                  ),
+          //controls
+          if (_controlsVisible)
+            Center(
+              child: IconButton(
+                iconSize: 80,
+                icon: Icon(
+                  _controller?.value.isPlaying == true
+                      ? Icons.pause_circle_filled
+                      : Icons.play_circle_filled,
+                  color: Colors.white.withOpacity(0.8),
                 ),
-
-                _buildVideoControls(),
-              ],
+                onPressed: _togglePlayPause,
+              ),
             ),
-          ),
 
-        if (_isLoading)
-          const Center(
-            child: SpinKitFadingCircle(color: Colors.orange, size: 50.0),
-          ),
-      ],
+
+          if (_controlsVisible && _controller?.value.isInitialized == true)
+            Positioned(
+              bottom: isPortrait ? 0 : 0,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: [
+
+                  VideoProgressIndicator(
+                    _controller!,
+                    allowScrubbing: true,
+                    colors: const VideoProgressColors(
+                      playedColor: Colors.orange,
+                      bufferedColor: Colors.grey,
+                      backgroundColor: Colors.black,
+                    ),
+                  ),
+
+                  _buildVideoControls(),
+                ],
+              ),
+            ),
+
+          if (_isLoading)
+            const Center(
+              child: SpinKitFadingCircle(color: Colors.orange, size: 50.0),
+            ),
+        ],
+      ),
     );
   }
 
