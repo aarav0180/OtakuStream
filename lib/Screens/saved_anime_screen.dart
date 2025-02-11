@@ -68,7 +68,6 @@ class _SavedAnimeScreenState extends State<SavedAnimeScreen> {
         _savedAnimes = formattedData;
       });
 
-      print(formattedData);
       showCustomSnackBar(context, "Yay! Your saved animes have been fetched successfully");
     } catch (e) {
       showCustomSnackBar(context, "Oops! We couldn’t fetch the animes. Please try again or report the issue.");
