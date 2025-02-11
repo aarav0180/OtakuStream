@@ -67,6 +67,8 @@ class _SavedAnimeScreenState extends State<SavedAnimeScreen> {
         _isLoading = false;
         _savedAnimes = formattedData;
       });
+
+      print(formattedData);
       showCustomSnackBar(context, "Yay! Your saved animes have been fetched successfully");
     } catch (e) {
       showCustomSnackBar(context, "Oops! We couldn’t fetch the animes. Please try again or report the issue.");
@@ -177,7 +179,7 @@ class ListCard extends StatelessWidget {
     required this.title,
     required this.studio,
     required this.id,
-    required this.onDelete
+    required this.onDelete,
   });
 
   void showCustomSnackBar(BuildContext context, String message) {
@@ -191,16 +193,19 @@ class ListCard extends StatelessWidget {
       behavior: SnackBarBehavior.floating,
       duration: const Duration(seconds: 3),
     );
-
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
-
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => MovieDetailPage(id: id,)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => MovieDetailPage(
+                  id: id,
+                )));
       },
       child: Padding(
         padding: const EdgeInsets.only(right: 9.0),
@@ -247,17 +252,15 @@ class ListCard extends StatelessWidget {
                       children: [
                         SizedBox(
                           width: 100,
-                          child: Flexible(
-                            child: Text(
-                              title,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -269,33 +272,30 @@ class ListCard extends StatelessWidget {
                               color: Color(0xFFFFA726),
                             ),
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis, // Truncate text with ellipsis
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
-                    // Add delete button
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.orange,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.black),
-                            onPressed: () {
-                              onDelete(id);
-                            },
-                          ),
+                        icon: const Icon(Icons.delete, color: Colors.black),
+                        onPressed: () {
+                          onDelete(id);
+                        },
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-
           ],
         ),
       ),
     );
-
   }
 }
