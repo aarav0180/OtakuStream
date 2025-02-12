@@ -48,15 +48,19 @@ dependencies:
 
   flutter_spinkit: null
 
-  dio: null
-  path_provider: null
+
   google_fonts: null
-  shimmer: null
+
   flutter_native_splash: ^2.4.3
   flutter_launcher_icons: ^0.14.3
   cached_network_image: null
   lottie: null
   wakelock_plus: ^1.2.10
+  firebase_core: null
+  cloud_firestore: null
+  firebase_messaging: null
+  firebase_analytics: null
+  awesome_notifications: ^0.10.0
 
 dev_dependencies:
   flutter_test:

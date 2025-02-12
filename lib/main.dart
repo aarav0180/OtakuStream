@@ -1,52 +1,108 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:otaku_stream/Models/anime_detail.dart';
-import 'package:otaku_stream/Providers/genre_provider.dart';
-import 'package:otaku_stream/Providers/stream_provider.dart';
-import 'package:otaku_stream/Screens/HomePage.dart';
-import 'package:otaku_stream/Screens/explorepage.dart';
-import 'package:otaku_stream/Screens/login_screen.dart';
-import 'package:otaku_stream/Widgets/bottom_nav.dart';
 import 'package:provider/provider.dart';
 import 'Providers/detail_provider.dart';
 import 'Providers/episode_provider.dart';
 import 'Providers/home_provider.dart';
 import 'Providers/server_provider.dart';
+import 'Providers/stream_provider.dart';
+import 'Providers/genre_provider.dart';
+import 'Screens/HomePage.dart';
+import 'Screens/explorepage.dart';
+import 'Widgets/bottom_nav.dart';
+import 'firebase_options.dart';
 
-void main() {
-  //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]).then((value){
-    runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => HomeProvider()),
-          ChangeNotifierProvider(create: (context) => DetailProvider()),
-          ChangeNotifierProvider(create: (_) => EpisodeProvider()),
-          ChangeNotifierProvider(create: (_) => ServerProvider()),
-          ChangeNotifierProvider(create: (_) => StreamingProvider()),
-          ChangeNotifierProvider(create: (_) => GenreProvider()),
-        ],
-        child: const AnimeApp(),
-      ),
-    );
-  //});
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+Future<void> initFirebase() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+}
+
+Future<void> initAwesomeNotifications() async {
+  await AwesomeNotifications().initialize(
+    'resource://drawable/img',
+    [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic Notifications',
+        channelDescription: 'Notification channel for app updates',
+        defaultColor: Colors.black,
+        ledColor: Colors.orange,
+        playSound: true,
+        soundSource: 'resource://raw/pikachu', // Custom sound from res/raw (without extension)
+        importance: NotificationImportance.High,
+        channelShowBadge: true,
+      )
+    ],
+    debug: true,
+  );
+  bool allowed = await AwesomeNotifications().isNotificationAllowed();
+  if (!allowed) {
+    await AwesomeNotifications().requestPermissionToSendNotifications();
+  }
+}
+
+Future<void> initMessaging() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  await messaging.requestPermission(alert: true, badge: true, sound: true);
+  await messaging.getToken();
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    RemoteNotification? notification = message.notification;
+    if (notification != null) {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: notification.hashCode,
+          channelKey: 'basic_channel',
+          title: notification.title,
+          body: notification.body,
+          payload: {'redirect': '/'},
+        ),
+      );
+    }
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    navigatorKey.currentState?.pushNamed('/');
+  });
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initFirebase();
+  await initAwesomeNotifications();
+  await initMessaging();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => HomeProvider()),
+        ChangeNotifierProvider(create: (context) => DetailProvider()),
+        ChangeNotifierProvider(create: (context) => EpisodeProvider()),
+        ChangeNotifierProvider(create: (context) => ServerProvider()),
+        ChangeNotifierProvider(create: (context) => StreamingProvider()),
+        ChangeNotifierProvider(create: (context) => GenreProvider()),
+      ],
+      child: const AnimeApp(),
+    ),
+  );
 }
 
 class AnimeApp extends StatelessWidget {
   const AnimeApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF121212),
       ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const NavigationWrapper(),//AnimeLoginScreen()
-          '/page1': (context) => const ExplorePage(),
-          '/page2': (context) => const AnimeHomeScreen(),
-        },
-        //home: NavigationWrapper()//AdvancedVideoPlayer()//const VideoPlayerScreen(hlsUrl: "https://gg3.biananset.net/_v7/74a50cfd4c1c68eb65e43d21048f2e2dad2e8db6b42e757ada8fbfd1b4fb38d74b1c23d794f22381a22e44f43c7733f840067afe2e967767eb8a99a3c03102440da0706c30b5e4ed0751e68d7ffd5a686afffad7e16b4c77f16bf345606bdeab79112d52a761e9e003f90a8008a67d833314df0265b6c93971604bd7d00d4179/master.m3u8", episodes: ["vlkdn", "akjsb","d"],),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const NavigationWrapper(),
+        '/page1': (context) => const ExplorePage(),
+        '/page2': (context) => const AnimeHomeScreen(),
+      },
     );
   }
 }
