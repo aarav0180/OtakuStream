@@ -75,7 +75,7 @@ dev_dependencies:
 
 flutter_icons:
   android: true           # Generate icons for Android
-  ios: false               # Generate icons for iOS
+  ios: true              # Generate icons for iOS
   image_path: "assets/images/logo.png"  # Path to your app icon file
   adaptive_icon_background: "#FF7F32"  # Optional: Background color for Android adaptive icons
   adaptive_icon_foreground: "assets/images/logo.png"
@@ -128,56 +128,25 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 
 flutter_native_splash:
-  # Background color of the splash screen.
-  color: "#000000"  # Black background color (for a sleek dark look).
+  color: "#000000"  # Black background
+  image: "assets/images/logo.png"  # App logo
 
-  # Background image is already set to a logo, we'll keep this as is.
-  background_image: "assets/images/logo.png"
+  color_dark: "#111111"  # Dark mode background
+  image_dark: "assets/images/logo.png"  # Dark mode logo (optional)
 
-  # Image (logo) used in the splash screen. Ensure it's a high-quality PNG.
-  image: "assets/images/logo.png"
-
-  # Optional branding position and padding settings.
-  branding_mode: bottom  # Place branding logo at the bottom for better positioning.
-  branding_bottom_padding: 24  # Add a little padding from the bottom.
-
-  # Dark mode configuration (use a slightly dark theme for dark mode).
-  color_dark: "#111111"  # A dark gray for dark mode background.
-  image_dark: "assets/images/logo.png"  # Optional: use an alternative logo for dark mode.
-
-  # For Android 12 and above, make sure to use the app icon in splash screen if no specific image is set.
   android_12:
     image: "assets/images/logo.png"
-    color: "#000000"  # Same black background for Android 12.
-    icon_background_color: "#FF7F32"  # Orange icon background for a pop of color.
+    color: "#000000"
+    icon_background_color: "#FF7F32"  # (Only affects Android 12)
 
-  # Android and iOS platform-specific configurations for color.
-  color_android: "#000000"  # Black background for Android splash screen.
-  color_ios: "#000000"  # Black background for iOS splash screen.
+  color_ios: "#000000"  # iOS background
+  color_dark_ios: "#1A1A1A"  # Dark mode for iOS
 
-  # Orange color theme on both platforms:
-  color_dark_android: "#1A1A1A"  # Darker shade for dark mode on Android.
-  color_dark_ios: "#1A1A1A"  # Darker shade for dark mode on iOS.
+  fullscreen: true  # Makes splash screen immersive
 
-  # Full-screen option for Android to make the splash screen immersive.
-  fullscreen: true  # Hide the notification bar.
+  android_gravity: center
+  ios_content_mode: center  # iOS content centering
 
-  # Optional: If you want to set specific splash background color for different platforms:
-  color_web: "#FF7F32"  # Highlighting orange for the web splash screen.
-  background_image_web: "assets/images/logo.png"  # Keep the logo in web as well.
-
-  # Branding settings.
-  branding: "assets/images/logo.png"  # Branding can be used in the splash screen (if needed).
-
-  # Platform-specific splash configurations (Android, iOS, Web).
-  android_gravity: center  # Position the splash content at the center of the screen.
-  ios_content_mode: center  # Same for iOS, content is centered.
-
-  # Commands to run the configuration:
-  # To apply changes:
-  # Run the following command in the terminal:
+  # Run this command to apply:
   # dart run flutter_native_splash:create
-
-  # To remove the splash screen or reset it to the default white background:
-  # dart run flutter_native_splash:remove
 

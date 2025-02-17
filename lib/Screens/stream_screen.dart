@@ -856,8 +856,8 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
 
   Widget _buildVideoPlayer() {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    // final screenWidth = MediaQuery.of(context).size.width;
+    // final screenHeight = MediaQuery.of(context).size.height;
 
     double aspectRatio = 16 / 9;
 
@@ -873,7 +873,7 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
             //     ? (_isFullscreen ? screenWidth / screenHeight : _controller!.value.aspectRatio)
             //     : 16 / 9,
             child: _controller?.value.isInitialized == true
-                ? VideoPlayer(_controller!)
+                ? Center(child: VideoPlayer(_controller!))
                 : const Center(
               child: SpinKitFadingCircle(
                 color: Colors.orange,
@@ -1132,7 +1132,7 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
         child: Column(
           children: [
             Expanded(
-              child: _buildVideoPlayer(),
+              child: Center(child: _buildVideoPlayer()),
             ),
 
             if (isPortrait) ...[

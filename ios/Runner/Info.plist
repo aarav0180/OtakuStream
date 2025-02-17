@@ -49,5 +49,16 @@
 		<true/>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
+		</dict>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>We need access to your photos to upload images.</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>We need access to save images to your gallery.</string>
+		<key>NSUserNotificationUsageDescription</key>
+		<string>We need permission to send you notifications.</string>
 	</dict>
 </plist>
