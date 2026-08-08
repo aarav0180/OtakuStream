@@ -35,6 +35,7 @@
 
 import 'package:flutter/cupertino.dart';
 import '../Backend/Api/api_service.dart';
+import '../Backend/Adapters/response_adapter.dart';
 import '../Models/episode_details.dart';
 import '../Services/episode_cache.dart';
 
@@ -56,11 +57,11 @@ class EpisodeProvider with ChangeNotifier {
       final cachedData = await EpisodeCache.loadFromCache(cacheKey);
 
       if (cachedData != null) {
-        episodeData = Episode.fromJson(cachedData);
+        episodeData = Episode.fromJson(ResponseAdapter.normalizeEpisodeResponse(cachedData));
       } else {
         // Fetch from API and save to cache
         final apiResponse = await ApiService.fetchEpisodes(animeId);
-        episodeData = Episode.fromJson(apiResponse);
+        episodeData = Episode.fromJson(ResponseAdapter.normalizeEpisodeResponse(apiResponse));
         await EpisodeCache.saveToCache(cacheKey, apiResponse);
       }
     } catch (error) {

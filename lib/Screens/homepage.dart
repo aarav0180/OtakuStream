@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:otaku_stream/Screens/anime_detail.dart';
 import 'package:otaku_stream/Widgets/hamburger.dart';
+import 'package:otaku_stream/Widgets/provider_selector.dart';
 import 'package:provider/provider.dart';
 import '../Providers/home_provider.dart';
 
@@ -67,7 +68,12 @@ class _AnimeHomeScreenState extends State<AnimeHomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 16,),
+            const SizedBox(height: 8),
+            
+            // Provider Selector - Collapsible
+            const ProviderSelector(),
+
+            const SizedBox(height: 8),
 
             // Carousel Section using Spotlight Animes
             SizedBox(

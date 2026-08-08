@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Backend/Api/api_service.dart';
+import '../Backend/Adapters/response_adapter.dart';
 import '../Models/server_model.dart';
 import '../Services/server_cache.dart';
 
@@ -17,11 +18,11 @@ class ServerProvider with ChangeNotifier {
       final cachedData = await ServerCache.getFromCache(cacheKey);
 
       if (cachedData != null) {
-        serverData = Server.fromJson(cachedData);
+        serverData = Server.fromJson(ResponseAdapter.normalizeServerResponse(cachedData));
       } else {
         // Fetch from API and save to cache
         final data = await ApiService.fetchEpisodeServers(animeId);
-        serverData = Server.fromJson(data);
+        serverData = Server.fromJson(ResponseAdapter.normalizeServerResponse(data));
         await ServerCache.saveToCache(cacheKey, data);
       }
     } catch (error) {

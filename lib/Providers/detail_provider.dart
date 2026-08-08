@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Backend/Api/api_service.dart';
+import '../Backend/Adapters/response_adapter.dart';
 import '../Models/anime_detail.dart';
 import '../Services/detail_cache.dart';
 
@@ -21,7 +22,7 @@ class DetailProvider with ChangeNotifier {
       // If cache is null, fetch from API
       if (_animeDetail == null) {
         final apiResponse = await ApiService.fetchAnimeDetail(animeId);
-        _animeDetail = AnimeDetail.fromJson(apiResponse);
+        _animeDetail = AnimeDetail.fromJson(ResponseAdapter.normalizeAnimeDetailResponse(apiResponse));
         print(apiResponse);
 
         // Save the fetched data to the cache

@@ -3,21 +3,22 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'Backend/Api/api_service.dart';
 import 'Providers/detail_provider.dart';
 import 'Providers/episode_provider.dart';
 import 'Providers/home_provider.dart';
 import 'Providers/server_provider.dart';
 import 'Providers/stream_provider.dart';
 import 'Providers/genre_provider.dart';
-import 'Screens/HomePage.dart';
+import 'Screens/homepage.dart';
 import 'Screens/explorepage.dart';
 import 'Widgets/bottom_nav.dart';
-import 'firebase_options.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> initFirebase() async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
 }
 
 Future<void> initAwesomeNotifications() async {
@@ -69,6 +70,16 @@ Future<void> initMessaging() async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize API Service with saved provider
+  final prefs = await SharedPreferences.getInstance();
+  final savedProvider = prefs.getString('selectedProvider') ?? 'brainudeu';
+  final provider = AnimeProvider.values.firstWhere(
+    (p) => p.toString().split('.').last == savedProvider,
+    orElse: () => AnimeProvider.brainudeu,
+  );
+  ApiService.setProvider(provider);
+  
   await initFirebase();
   await initAwesomeNotifications();
   await initMessaging();

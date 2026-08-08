@@ -33,7 +33,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
     });
 
     try {
-      final data = await ApiService.fetchSearchAnimes(searchQuery, currentPage);
+      final data = await ApiService.fetchSearchAnimes(searchQuery, page: currentPage);
 
       setState(() {
         searchResults.addAll(data['data']['animes']);

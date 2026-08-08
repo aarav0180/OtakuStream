@@ -20,7 +20,7 @@ class GenreProvider with ChangeNotifier {
         serverData = Genre.fromJson(cachedData);
       } else {
         // Fetch from API and save to cache
-        final data = await ApiService.fetchGenreAnimes(genre, currentPage);
+        final data = await ApiService.fetchGenreAnimes(genre, page: currentPage);
         serverData = Genre.fromJson(data);
         await GenreCache.saveToCache(cacheKey, data);
       }

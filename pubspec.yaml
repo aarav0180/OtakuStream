@@ -98,8 +98,10 @@ flutter:
     - assets/images/back.jpg
     - assets/images/back2.png
     - assets/animations/
+    - assets/animations/animation1.json
     - assets/animations/animation2.json
-    - assets/animations/comingsoon.json
+    - assets/animations/comingSoon.json
+    - assets/animations/notFound.json
     - assets/animations/soon.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

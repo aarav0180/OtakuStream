@@ -36,6 +36,7 @@
 import 'package:flutter/material.dart';
 import 'package:otaku_stream/Models/stream_model.dart';
 import '../Backend/Api/api_service.dart';
+import '../Backend/Adapters/response_adapter.dart';
 import '../Services/stream_cache.dart';
 
 class StreamingProvider with ChangeNotifier {
@@ -53,7 +54,7 @@ class StreamingProvider with ChangeNotifier {
 
       // If there is cached data and it's not expired, use it.
       if (cachedData != null && !(await StreamCache.isCacheExpired(cacheKey))) {
-        streamData = EpisodeDetail.fromJson(cachedData);
+        streamData = EpisodeDetail.fromJson(ResponseAdapter.normalizeStreamResponse(cachedData));
       } else {
         // If cached data is expired (or doesn't exist), clear the cache if needed.
         if (cachedData != null) {
@@ -61,7 +62,7 @@ class StreamingProvider with ChangeNotifier {
         }
         // Fetch from API and save to cache.
         final data = await ApiService.fetchEpisodeSources(animeId, server, category);
-        streamData = EpisodeDetail.fromJson(data);
+        streamData = EpisodeDetail.fromJson(ResponseAdapter.normalizeStreamResponse(data));
         await StreamCache.saveToCache(cacheKey, data);
       }
     } catch (error) {
